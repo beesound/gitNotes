@@ -1,2 +1,18 @@
 git add背后到底发生了什么
 =======================
+* 当我们在git仓库文件中创建一个文件时，.git的文件夹中不会发生任何变化，因为这个操作是保存在git的工作区中的，
+git是能够识别出我们创建了新的文件的。我们用git status commander就可以查看我们做了哪些修改。
+* 如果我们想要git帮我们去管理新创建的文件，我们就可以使用git add <filename> commander将文件放进git的缓存区。
+* 当我们使用git add commander后，.git的隐藏文件夹中就会发生变化，文件夹中会增加2个文件和一个文件夹，他们分别是
+objects folder中会多一个folder，该folder中还生成了一个文件，另一个文件是index文件。
+* 这个objects folder到底是什么作用了，这个folder是用来保存三种类型的对象的，这些对象的文件名其实是一个hash的sha1值，
+git提供一些命令（虽然命令不常用），但这些commander可以查看对象文件的类型和内容。这个commander是 git cat-file <filename>
+* 我可以使用git cat-file -t <filename>去查看对象的类型，当我使用这个命令去查看刚刚objects文件夹中新生成的文件时
+会返回blob类型，这个blob类型是用来做什么的了？它是用来存储刚刚我们新建文件的内容。这时我们使用git cat-file -p <filename>命令
+就可以查看该blob对象保存的内容。
+* 这个blob类型文件保存了文件的内容，那还保存了这个文件的名字了吗？我们可以来测试一下，我们再来创建一个不同名字但内容相同的文件，
+然后我们再git add一下这个文件，我们看看.git中objects文件夹中会不会在生成一个文件来对象这个新文件了？结果是没有发生任何变化，
+说明blob类型中只保存了新建文件的内容，并没有保存文件的名字。
+* 这个objects文件名的hash值是如何计算的呢？其实很简单，我在python文件夹中保存了一个计算这个hash值的python程序[(详细位置)](..\python\01ch\githash.py)
+这个算法其实就是算了一个字符串的hash值，这个字符串是什么了？这个字符串的格式就是"blob %u\0"(%u是这个字符串的长度要包含了末尾的\n)然后加上
+这个字符串的完整内容。例如"blob 10\0hello git\n"它的hash值就是"8d0e41234f24b6da002d962a26c2495ea16a425f"
