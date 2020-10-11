@@ -1,0 +1,26 @@
+git commit之后会发生什么
+=======================
+* 当执行了git commit之后，objects文件下会增加两个对象文件，使用git cat-file -t命令查看
+这个两个文件的类型，它分别是commit对象和tree对象
+* 再使用git cat-file -p查看commit对象文件的内容，里面包含一个tree对象的信息和作者的信息、
+时间信息，还有就是commit message的信息，具体内容如下：
+> $ git cat-file -p cf5f<br>
+tree 943e899bf49c75faa6646f808be8cd21002a6d3e<br>
+author xxxxxx <xxxxxx@xx.com> 1602409226 +0800<br>
+committer xxxxxx <xxxxxx@xx.com> 1602409226 +0800<br>
+<br>
+first commit
+
+* 再使用git cat-file -p查看tree对象文件的内容,里面包含一个blob对象的信息，其中包含了
+文件的权限，对象类型，对象的hash值，blob文件对象对应的文件名，具体内容如下：
+> 100644 blob ca5a43e53e012b6fd3b2a8a06ebb6c2ee24a24e5    file1.txt
+
+* 同时还新增了两个文件，一个是.git/refs/heads/master文件，另外一个是.git/HEAD文件，在
+.git/refs/heads/master文件中保存着commit对象文件的hash值，在.git/HEAD文件中保存的
+是ref: refs/heads/master，正是指向另外一个新增加的文件，.git/HEAD这个文件在这里充当的
+是指针的作用，将指针指向master这个分支。而master这个分支指向的是最新这次生成的commit对象。
+
+* objects包含三种对象分别是blob，commit，tree，三种对象的关系是，commit对象指向一个tree
+对象，tree对象又指向每个文件的文件名及对应的blob对象。
+
+* 在.git/refs/heads/master文件中的hash值又指向最新的commnit对象。
