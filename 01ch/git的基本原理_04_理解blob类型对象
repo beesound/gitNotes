@@ -1,0 +1,10 @@
+理解blob类型对象
+===============
+* 读取该blob类型对象文件内容，会显示一串乱码，其实这个内容是经过了压缩的。
+* 如何读取该压缩文件的原始内容了，我们要借助python中的zlib库，详细见下
+> python3
+import zlib
+compressed_contents = open(filename, 'rb').read()
+zlib.decompress(compressed_contents)或者zlib.decompress(compressed_contents).decode()
+
+* 通过解压我们读取出的文件内容正好就是用来计算hash值的字符串格式，例如"blob 10\0hello git"

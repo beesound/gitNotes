@@ -1,0 +1,6 @@
+如何在os或者linux系统中计算objects中文件名的hash值
+========================================
+* os或者linux中带有一个工具shasum，我们使用这个工具就可以计算一个字符串的hash值
+* 在终端中输入echo "hello git" | shasum 命令我们就可以轻松计算hello git这个字符串的
+hash值。
+* 在之前的例子中我们可以使用 echo "blob 10\0hello git" | shasum计算出hash值
